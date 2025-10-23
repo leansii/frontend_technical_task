@@ -128,35 +128,6 @@
  *           description: Номер места
  */
 
-/**
- * @openapi
- * components:
- *   schemas:
- *     BookedSeat:
- *       type: object
- *       description: Забронированное место
- *       properties:
- *         id:
- *           type: string
- *           description: Идентификатор бронирования
- *         movieSessionId:
- *           type: number
- *           description: Идентификатор сеанса
- *         userId:
- *           type: number
- *           description: Идентификатор пользователя
- *         isPayed:
- *           type: boolean
- *           description: Оплачено ли место
- *         seats:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Seat'
- *         bookedAt:
- *           type: string
- *           format: date-time
- *           description: Время бронирования
- */
 
 /**
  * @openapi

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { movieSessions, bookings } from'../data/index.js';
+import { movieSessions, bookings } from '../data/index.js';
 import { authenticateToken } from '../auth.js';
 
 const router = Router();
@@ -12,7 +12,7 @@ const router = Router();
  *     summary: Получить детали сеанса
  *     description: Возвращает детальную информацию о сеансе, включая забронированные места.
  *     tags:
- *       - Киносеансы
+ *       - Movie Sessions
  *     parameters:
  *       - in: path
  *         name: movieSessionId
@@ -55,7 +55,7 @@ router.get('/movieSessions/:movieSessionId', (req, res) => {
  *     summary: Забронировать места на киносеанс
  *     description: Бронирует указанные места на киносеанс для аутентифицированного пользователя.
  *     tags:
- *       - Киносеансы
+ *       - Movie Sessions
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -136,13 +136,15 @@ router.post('/movieSessions/:movieSessionId/bookings', authenticateToken, (req, 
     return res.status(400).json({ message: 'Неверное тело запроса' });
   }
 
-  const hasConflictedBooking = bookings.find((booking) =>
-    booking.seats.some((bookedSeat) =>
-      seats.find(
-        ({ rowNumber, seatNumber }) =>
-          bookedSeat.rowNumber === rowNumber && bookedSeat.seatNumber === seatNumber
+  const hasConflictedBooking = bookings.find(
+    (booking) =>
+      booking.movieSessionId === movieSessionId &&
+      booking.seats.some((bookedSeat) =>
+        seats.find(
+          ({ rowNumber, seatNumber }) =>
+            bookedSeat.rowNumber === rowNumber && bookedSeat.seatNumber === seatNumber
+        )
       )
-    )
   );
 
   if (hasConflictedBooking) {
@@ -165,6 +167,10 @@ router.post('/movieSessions/:movieSessionId/bookings', authenticateToken, (req, 
 
 function isValidSeats(seats, rowsNumber, seatsPerRow) {
   if (!Array.isArray(seats)) {
+    return false;
+  }
+
+  if (!seats.length) {
     return false;
   }
 

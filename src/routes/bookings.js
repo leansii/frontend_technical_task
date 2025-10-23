@@ -11,7 +11,7 @@ const router = Router();
  *     summary: Оплатить бронирование
  *     description: Отмечает бронирование как оплаченное.
  *     tags:
- *       - Бронирования
+ *       - Bookings
  *     security:
  *       - bearerAuth: []
  *     parameters:

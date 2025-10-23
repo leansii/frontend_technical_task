@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../auth.js';
-import { users } from'../data/index.js';
+import { users } from '../data/index.js';
 
 const router = Router();
 
@@ -13,7 +13,7 @@ const router = Router();
  *     summary: Вход пользователя
  *     description: Аутентификация пользователя и получение JWT токена.
  *     tags:
- *       - Аутентификация
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
   if (!isMatch) {
     return res.status(401).json({ message: 'Неверное имя пользователя или пароль' });
   }
-  const token = jwt.sign({ sub: user.id }, JWT_SECRET, { expiresIn: '1h' });
+  const token = signToken(user);
   res.json({ token });
 });
 
@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
  *     summary: Регистрация нового пользователя
  *     description: Регистрация нового пользователя в системе.
  *     tags:
- *       - Аутентификация
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -91,8 +91,15 @@ router.post('/login', async (req, res) => {
  *               password:
  *                 type: string
  *     responses:
- *       201:
+ *       200:
  *         description: Пользователь успешно зарегистрирован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
  *       400:
  *         description: Требуется имя пользователя и пароль
  *         content:
@@ -125,11 +132,16 @@ router.post('/register', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     const user = { id: users.length + 1, username, password_hash: passwordHash };
     users.push(user);
-    res.status(201).json();
+    const token = signToken(user);
+    res.json({ token });
   } catch (err) {
     const error = err instanceof Error ? err : new Error(String(err));
     res.status(500).json({ message: 'Ошибка регистрации', error: error.message });
   }
 });
+
+function signToken(user) {
+  return jwt.sign({ sub: user.id }, JWT_SECRET, { expiresIn: '1h' });
+}
 
 export default router;

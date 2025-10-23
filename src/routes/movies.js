@@ -10,7 +10,7 @@ const router = Router();
  *     summary: Получить список фильмов
  *     description: Возвращает список всех доступных фильмов.
  *     tags:
- *       - Фильмы
+ *       - Movies
  *     responses:
  *       200:
  *         description: Список фильмов
@@ -32,7 +32,7 @@ router.get('/movies', async (req, res) => {
  *     summary: Получить список киносеансов для фильма
  *     description: Возвращает список всех доступных киносеансов для указанного фильма.
  *     tags:
- *       - Фильмы
+ *       - Movies
  *     parameters:
  *       - in: path
  *         name: movieId

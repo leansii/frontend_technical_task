@@ -1,6 +1,7 @@
 import './loadEnv.js';
 import url from 'url';
 import express from 'express';
+import cors from 'cors'
 import passport from 'passport';
 import authRouter from './routes/auth.js';
 import moviesRouter from './routes/movies.js';
@@ -22,6 +23,7 @@ const app = express();
 const port = process.env.PORT || 3022;
 
 app.use(express.json());
+app.use(cors());
 app.use(passport.initialize());
 app.use(authRouter);
 app.use(moviesRouter);
