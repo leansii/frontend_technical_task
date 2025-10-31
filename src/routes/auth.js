@@ -125,7 +125,7 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ message: 'Требуется имя пользователя и пароль' });
   }
   try {
-    const existingUser = users.find(({ username }) => username === username);
+    const existingUser = users.find((user) => user.username === username);
     if (existingUser) {
       return res.status(409).json({ message: 'Имя пользователя уже существует' });
     }
