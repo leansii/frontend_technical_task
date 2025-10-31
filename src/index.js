@@ -35,6 +35,11 @@ app.use(bookingsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/static', express.static(path.join(__dirname, '../static')));
 
+app.get('/api-docs.json', (_req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.json(swaggerSpec);
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 
