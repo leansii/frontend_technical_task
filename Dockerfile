@@ -1,24 +1,19 @@
-# Build stage
-FROM node:22.20-alpine AS build
+# Use a single-stage build
+FROM node:22-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
 
+# Install dependencies
 RUN npm ci --omit=dev --silent
 
 COPY . .
 
-# Final stage
-FROM gcr.io/distroless/nodejs20-debian12
-
-WORKDIR /app
-
-COPY --from=build /app ./
-
 # Create a non-root user and switch to it
-USER nonroot
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
 EXPOSE 3000
 
-CMD ["index.js"]
+CMD ["node", "src/index.js"]
